@@ -1,7 +1,8 @@
-import sys
+
 import pygame
 from setting import Settings
 from ship import Ship
+import game_function as df
 # 创建一个pygame窗口
 def run_game():
     #初始化一个游戏窗口并创建一个屏幕对象
@@ -18,15 +19,8 @@ def run_game():
     #主循环
     while True:
         #监视鼠标键盘事件
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                sys.exit()
+        df.check_events()
 
-        # 每次循环都会重新绘制屏幕
-        screen.fill(ai_settings.bg_color)
-        ship.blitme()
-
-        # 让新绘制的屏幕可见
-        pygame.display.flip()
+        df.update_screen(ai_settings, screen, ship)
 
 run_game()
