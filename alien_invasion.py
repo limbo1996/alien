@@ -19,8 +19,7 @@ def run_game():
     #主循环
     while True:
         #监视鼠标键盘事件
-        df.check_events()
-
+        df.check_events(ship)
         df.update_screen(ai_settings, screen, ship)
 
 run_game()
