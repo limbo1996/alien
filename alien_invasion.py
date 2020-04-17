@@ -15,11 +15,12 @@ def run_game():
     #设置背景颜色
     bg_color = (230, 230, 230)
     #创建飞船
-    ship = Ship(screen)
+    ship = Ship(ai_settings, screen)
     #主循环
     while True:
         #监视鼠标键盘事件
         df.check_events(ship)
+        ship.update()
         df.update_screen(ai_settings, screen, ship)
 
 run_game()
