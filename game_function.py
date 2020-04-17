@@ -3,6 +3,7 @@
 import  sys
 import pygame
 from Bullet import Bullet
+from alien import Alien
 #管理事件，简化run_game
 
 def check_keydown_evens(event, ai_settings, screen, ship, bullets):
@@ -13,6 +14,10 @@ def check_keydown_evens(event, ai_settings, screen, ship, bullets):
         ship.moving_left = True
     if event.key == pygame.K_SPACE:
         fire_bullets(ai_settings, screen, ship, bullets)
+
+    # 退出
+    if event.key == pygame.K_q:
+        sys.exit()
 
 
 def check_keyup_evens(event, ship):
@@ -36,8 +41,33 @@ def check_events(ai_settings, screen, ship, bullets):
             check_keyup_evens(event, ship)
         # 这样实现了长按键盘可以一直移动，只相应两个事件，按下和松开，按下时是T，松开为F，这样可以一直移动
 
+def get_number_aliens(ai_settings, alien_width):
+    """计算每行有多少外星人"""
+    available_space_x = ai_settings.screen_width - 2 * alien_width
+    number_aliens_x = int(available_space_x / (2 * alien_width))
 
-def update_screen(ai_settings, screen, ship, bullets):
+    return number_aliens_x
+
+def create_alien(ai_settings, screen, aliens, alien_number):
+    # 创建一个外星人是其加入当前行
+    alien = Alien(ai_settings, screen)
+    alien_width = alien.rect.width
+    alien.x = alien_width + alien_width * 2 * alien_number
+    alien.rect.x = alien.x
+    aliens.add(alien)
+
+def create_fleet(ai_settings, screen, aliens):
+    """创建外星人群"""
+    # 创建一个外星人，并计算一行最多多少个
+    # 外星人的间距是外星人的宽度
+    alien = Alien(ai_settings, screen)
+    number_aliens_x = get_number_aliens(ai_settings, alien.rect.width)
+
+    # 创建第一行外星人
+    for alien_number in range(number_aliens_x):
+        create_alien(ai_settings, screen, aliens, alien_number)
+
+def update_screen(ai_settings, screen, ship, aliens, bullets):
     """更新屏幕图像，切换到新图像"""
     #每次循环都会重新绘制屏幕
     screen.fill(ai_settings.bg_color)
@@ -46,7 +76,8 @@ def update_screen(ai_settings, screen, ship, bullets):
         bullet.draw_bullet()
     # 绘制飞船
     ship.blitme()
-
+    # 绘制外星人
+    aliens.draw(screen)
     # 让新绘制的屏幕可见
     pygame.display.flip()
 

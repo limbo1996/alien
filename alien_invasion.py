@@ -28,6 +28,11 @@ def run_game():
     # 创建group管理所有打出去的子弹
     bullets = Group()
 
+    # 外星人
+    aliens = Group()
+    # 创建外星人群
+    gf.create_fleet(ai_settings, screen, aliens)
+
     #主循环
     while True:
         #监视鼠标键盘事件
@@ -38,8 +43,10 @@ def run_game():
         # 更新子弹，并删除消失的子弹
         gf.updata_bullets(bullets)
 
+        # 更新外星人
+
         # 更新屏幕
-        gf.update_screen(ai_settings, screen, ship, bullets)
+        gf.update_screen(ai_settings, screen, ship, aliens, bullets)
 
 
 run_game()
