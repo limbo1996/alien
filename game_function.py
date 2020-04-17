@@ -67,6 +67,23 @@ def create_fleet(ai_settings, screen, aliens):
     for alien_number in range(number_aliens_x):
         create_alien(ai_settings, screen, aliens, alien_number)
 
+
+def updata_bullets(bullets):
+    # 更新子弹
+    bullets.update()
+
+    # 删除消失的子弹
+    for bullet in bullets.copy():
+        if bullet.rect.bottom <= 0:
+            bullets.remove(bullet)
+
+
+def fire_bullets(ai_settings, screen, ship, bullets):
+    if len(bullets) <= ai_settings.bullets_allowed:
+        new_bullets = Bullet(ai_settings, screen, ship)
+        bullets.add(new_bullets)
+
+
 def update_screen(ai_settings, screen, ship, aliens, bullets):
     """更新屏幕图像，切换到新图像"""
     #每次循环都会重新绘制屏幕
@@ -80,21 +97,3 @@ def update_screen(ai_settings, screen, ship, aliens, bullets):
     aliens.draw(screen)
     # 让新绘制的屏幕可见
     pygame.display.flip()
-
-
-def updata_bullets(bullets):
-    # 更新子弹
-    bullets.update()
-
-    # 删除消失的子弹
-    for bullet in bullets.copy():
-        if bullet.rect.bottom <= 0:
-            bullets.remove(bullet)
-
-def fire_bullets(ai_settings, screen, ship, bullets):
-    if len(bullets) <= ai_settings.bullets_allowed:
-        new_bullets = Bullet(ai_settings, screen, ship)
-        bullets.add(new_bullets)
-
-
-
