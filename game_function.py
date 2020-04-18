@@ -119,6 +119,7 @@ def update_aliens(ai_settings, aliens):
     check_fleet_edges(ai_settings, aliens)
     # 移动方向的更改最终在update里，因为update 乘了 fleet_direction
     aliens.update()
+
 """
 子弹管理
 创建子弹
@@ -126,7 +127,7 @@ def update_aliens(ai_settings, aliens):
 开火
 检测子弹与外星人是否发生碰撞，如果有，射杀外星人并清楚子弹
 """
-def updata_bullets(bullets, aliens):
+def updata_bullets(bullets, aliens, ai_settings, screen, ship):
     # 更新子弹
     bullets.update()
 
@@ -141,7 +142,10 @@ def updata_bullets(bullets, aliens):
     上面的函数是检测bullets 和aliens两个group是否有成员发生碰撞，如果有，删除二者，如果只删除外星人不删除子弹，
     将第一个Ture改为F
     """
-
+    # 检测外星人是否被消灭完了，若果是,就在创建一批新的外星人
+    if len(aliens) == 0:
+        bullets.empty()
+        create_fleet(ai_settings, screen, aliens, ship)
 
 # 开火，限制子弹数量
 def fire_bullets(ai_settings, screen, ship, bullets):
