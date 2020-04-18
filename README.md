@@ -18,4 +18,10 @@
 安装`pygame`
 > pip install --user hg+http://bitbucket.org/pygame/pygame
 
-打开余个
+注意：
+ `pygame`会和macos出现不兼容的情况
+ 测试代码：
+
+
+如果出现声音，但没有图像就是不兼容
+使用`miniconda`创建`python 3.7`的环境就可以了
