@@ -124,9 +124,9 @@ def update_aliens(ai_settings, aliens):
 创建子弹
 删除消失的子弹
 开火
-
+检测子弹与外星人是否发生碰撞，如果有，射杀外星人并清楚子弹
 """
-def updata_bullets(bullets):
+def updata_bullets(bullets, aliens):
     # 更新子弹
     bullets.update()
 
@@ -134,6 +134,14 @@ def updata_bullets(bullets):
     for bullet in bullets.copy():
         if bullet.rect.bottom <= 0:
             bullets.remove(bullet)
+
+    # 检测是否有子弹与外星人发生碰撞
+    collision = pygame.sprite.groupcollide(bullets, aliens, True, True)
+    """
+    上面的函数是检测bullets 和aliens两个group是否有成员发生碰撞，如果有，删除二者，如果只删除外星人不删除子弹，
+    将第一个Ture改为F
+    """
+
 
 # 开火，限制子弹数量
 def fire_bullets(ai_settings, screen, ship, bullets):

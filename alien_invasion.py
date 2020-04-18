@@ -41,7 +41,7 @@ def run_game():
         # 更新飞船
         ship.update()
         # 更新子弹，并删除消失的子弹
-        gf.updata_bullets(bullets)
+        gf.updata_bullets(bullets, aliens)
 
         # 更新外星人
         gf.update_aliens(ai_settings, aliens)
