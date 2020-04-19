@@ -18,6 +18,7 @@ class Ship():
         #将飞船放在屏幕底部中央
         self.rect.centerx = self.screen_rect.centerx
         self.rect.bottom = self.screen_rect.bottom
+
         # 储存centerx的值
         self.center = float(self.rect.centerx)
         #移动标记
@@ -41,3 +42,8 @@ class Ship():
     def blitme(self):
         """在指定位置绘制飞船"""
         self.screen.blit(self.image, self.rect)
+
+
+    def center_ship(self):
+        """在检测到碰撞后重新让飞船居中"""
+        self.center = self.screen_rect.centerx

@@ -4,6 +4,7 @@ import  sys
 import pygame
 from Bullet import Bullet
 from alien import Alien
+from time import sleep
 #管理事件，简化run_game
 """
 管理键盘事件
@@ -54,6 +55,10 @@ def check_events(ai_settings, screen, ship, bullets):
 能放下几行外星人
 创建外星人群
 检测是否有外星人碰到了屏幕边缘，如果有，改变水平方向移动，并下降
+
+检测外星人与飞船碰撞，消耗一艘飞船，一共三艘
+外星人到达屏幕底部
+
 """
 # 计算一行能放下多少外星人
 def get_number_aliens(ai_settings, alien_width):
@@ -114,11 +119,51 @@ def check_fleet_edges(ai_settings, aliens):
             change_fleet_direction(ai_settings, aliens)
             break
 # 更新外星人，应用check_fleet_edges更改外星人的方向，并下移
-def update_aliens(ai_settings, aliens):
+
+# 响应外星人撞击飞船
+def ship_hit(ai_setting, screen, aliens, ship, stats, bullets):
+    """响应撞击"""
+    # 将ship_left减一
+    if stats.ship_left > 0:
+
+        stats.ships_left -= 1
+
+        # 清空外星人和子弹列表
+        aliens.empty()
+        bullets.empty()
+
+        # 创建新的外星人，并创建新的飞船并居中
+        create_fleet(ai_setting, screen, aliens, ship)
+        ship.center_ship()
+
+        # 暂停
+        sleep(1)
+
+    else:
+        stats.game_activte = False
+
+def update_aliens(ai_settings, screen, aliens, ship, stats, bullets):
     """更行外星人群的位置"""
     check_fleet_edges(ai_settings, aliens)
     # 移动方向的更改最终在update里，因为update 乘了 fleet_direction
     aliens.update()
+
+    if pygame.sprite.spritecollideany(ship, aliens):
+        ship_hit(ai_settings, screen, aliens, ship, stats, bullets)
+
+    # 检测是否有外星人到达了屏幕底部
+    check_aliens_bottom(ai_settings, stats, screen, ship, aliens, bullets)
+
+# 检测外星人到达底部
+def check_aliens_bottom(ai_settings, stats, screen, ship, aliens, bullets):
+    """检测是否有外星人到达了屏幕底部"""
+    screen_rect = screen.get_rect()
+
+    for alien in aliens.sprites():
+        if alien.rect.bottom >= screen_rect.bottom:
+            # 像飞船被撞到一样处理
+            ship_hit(ai_settings, stats, screen, ship, aliens, bullets)
+            break
 
 """
 子弹管理
@@ -127,7 +172,7 @@ def update_aliens(ai_settings, aliens):
 开火
 检测子弹与外星人是否发生碰撞，如果有，射杀外星人并清楚子弹
 """
-def updata_bullets(bullets, aliens, ai_settings, screen, ship):
+def update_bullets(bullets, aliens, ai_settings, screen, ship):
     # 更新子弹
     bullets.update()
 
@@ -158,6 +203,15 @@ def fire_bullets(ai_settings, screen, ship, bullets):
 
 
 
+
+
+
+
+
+
+
+
+
 """
 屏幕管理，更新屏幕
 """
@@ -174,5 +228,6 @@ def update_screen(ai_settings, screen, ship, aliens, bullets):
     aliens.draw(screen)
     # 让新绘制的屏幕可见
     pygame.display.flip()
+
 
 
