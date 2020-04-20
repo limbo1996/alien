@@ -4,6 +4,7 @@ from ship import Ship
 import game_function as gf
 from pygame.sprite import Group
 from game_stats import GameStats
+from button import  Button
 
 # 创建一个pygame窗口
 def run_game():
@@ -36,6 +37,8 @@ def run_game():
 
     # 创建一个用于储存游戏统计信息的实例
     stats = GameStats(ai_settings)
+    # 创建按钮
+    play_button = Button(ai_settings, screen, "Play")
 
     #主循环
     while True:
@@ -55,7 +58,8 @@ def run_game():
             gf.update_aliens(ai_settings, screen, aliens, ship, stats, bullets)
 
         # 更新屏幕
-        gf.update_screen(ai_settings, screen, ship, aliens, bullets)
+        gf.update_screen(ai_settings, screen, stats, ship, aliens, bullets, play_button)
+
 
 
 run_game()
