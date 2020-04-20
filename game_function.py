@@ -35,7 +35,8 @@ def check_keyup_evens(event, ship):
     if event.key == pygame.K_LEFT:
         ship.moving_left = False
 # 检测事件
-def check_events(ai_settings, screen, ship, bullets):
+def check_events(ai_settings, screen, stats, play_button, ship,
+                 aliens, bullets):
     """相应鼠标键盘事件"""
     for event in pygame.event.get():# pygame的event.get可以检测键盘事件
         # 退出
@@ -48,6 +49,28 @@ def check_events(ai_settings, screen, ship, bullets):
         elif event.type == pygame.KEYUP:
             check_keyup_evens(event, ship)
         # 这样实现了长按键盘可以一直移动，只相应两个事件，按下和松开，按下时是T，松开为F，这样可以一直移动
+        # 响应鼠标按下
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+            check_play_button(ai_settings, screen, stats, play_button, aliens, ship, bullets, mouse_x, mouse_y)
+
+# 检测按钮事件
+def check_play_button(ai_settings, screen, stats, play_button, aliens, ship, bullets, mouse_x, mouse_y):
+    """在玩家点击的时候开始新游戏"""
+    button_clicked = play_button.rect.collidepoint(mouse_x, mouse_y)
+    if button_clicked and not stats.game_active:
+        # 重置统计信息
+        stats.reset_stats()
+        stats.game_active = True
+
+        # 清空外星人信息和子弹信息
+        aliens.empty()
+        bullets.empty()
+
+        # 重新创建外星人和飞船
+        create_fleet(ai_settings, screen, aliens, ship)
+        ship.center_ship()
+
 
 """管理外星人事件
 包括
@@ -124,7 +147,7 @@ def check_fleet_edges(ai_settings, aliens):
 def ship_hit(ai_setting, screen, aliens, ship, stats, bullets):
     """响应撞击"""
     # 将ship_left减一
-    if stats.ship_left > 0:
+    if stats.ships_left > 0:
 
         stats.ships_left -= 1
 
@@ -140,7 +163,7 @@ def ship_hit(ai_setting, screen, aliens, ship, stats, bullets):
         sleep(1)
 
     else:
-        stats.game_activte = False
+        stats.game_active = False
 
 def update_aliens(ai_settings, screen, aliens, ship, stats, bullets):
     """更行外星人群的位置"""
@@ -200,9 +223,6 @@ def fire_bullets(ai_settings, screen, ship, bullets):
     if len(bullets) <= ai_settings.bullets_allowed:
         new_bullets = Bullet(ai_settings, screen, ship)
         bullets.add(new_bullets)
-
-
-
 
 
 
